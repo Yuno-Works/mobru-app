@@ -1,0 +1,39 @@
+name: Flutter Build
+
+on:
+  push:
+    branches: ['feat/ios-support']
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.16.8
+
+      - run: flutter pub get
+
+      - run: flutter build ios --release --no-codesign
+
+      - name: Create Payload directory
+        run: mkdir -p Payload
+
+      - name: Move .app to Payload
+        run: mv /Users/runner/work/mobru-app/mobru-app/build/ios/Release-iphoneos/*.app Payload/
+
+      - name: Compress Payload to .zip
+        run: zip -r app.zip Payload
+
+      - name: Rename .zip to .ipa
+        run: mv app.zip app.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios
+          path: app.ipa
