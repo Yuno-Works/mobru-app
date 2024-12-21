@@ -1,4 +1,4 @@
-name: Flutter Build
+name: Flutter Build - iOS
 
 on:
   push:
@@ -8,7 +8,7 @@ jobs:
   ios:
     runs-on: macos-latest
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Flutter
@@ -33,7 +33,7 @@ jobs:
         run: mv app.zip app.ipa
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: ios
+          name: ios-app  # Customize the artifact name
           path: app.ipa
